@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 ## BUILD DOCKER IMAGE
       - name: Build Docker image
-        run: docker build -t ${{ env.IMAGE_NAME }} .
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
 ## PUSH DOCKER IMAGE
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }} 
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} 
