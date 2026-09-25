@@ -22,7 +22,7 @@ jobs:
           cache: 'maven'
 ## BUILD PROJECT
       - name: Build project
-        run: mvn clean package -DskipTests
+        run: mvn clean package
 ## DOCKER login
       - name: Docker login
         uses: docker/login-action@v2
