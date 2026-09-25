@@ -1,5 +1,11 @@
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21-jre AS builder
 WORKDIR /app
-COPY target/*.jar  app.jar
+COPY pom.xml .
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+RUN  mvn clean package 
+FROM eclipse-temurin:21-jre AS runtime
+WORKDIR /app
+COPY --from=builder /app/target/spring-boot-app-0.0.1-SNAPSHOT.jar ./spring-boot-app.jar
 EXPOSE 8081
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "spring-boot-app.jar"]
