@@ -1,7 +1,6 @@
 FROM eclipse-temurin:21-jre AS builder
 WORKDIR /app
 COPY pom.xml .
-RUN ./mvnw dependency:go-offline
 COPY src ./src
 RUN  mvn clean package 
 FROM eclipse-temurin:21-jre AS runtime
