@@ -35,3 +35,6 @@ jobs:
 ## PUSH DOCKER IMAGE
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} 
+      
+      - name: Run Docker container
+        run: docker run -d -p 8081:8081 ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
