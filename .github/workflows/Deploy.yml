@@ -1,0 +1,36 @@
+name: SPRING-BOOT-APP CICD PIPELINE
+on:
+  push:
+    branches:
+      - main
+env:
+  IMAGE_NAME: spring-boot-app
+  DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+## CHECKOUT CODE
+      - name: Checkout code
+        uses: actions/checkout@v3
+## SETTING UP JAVA
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+## BUILD PROJECT
+      - name: Build project
+        run: mvn clean package -DskipTests
+## DOCKER IMAGE BUILD
+      - name: docker build
+        run: docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
+##D OCKER LOGIN
+      - name: docker login
+        run: echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+## DOCKER IMAGE PUSH
+      - name: docker push
+        run: docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
+        
